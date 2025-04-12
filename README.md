@@ -1,71 +1,110 @@
-# rosenv README
+# 🤖 ros2env – ROS 2 Environment Manager for VS Code
 
-This is the README for your extension "rosenv". After writing up a brief description, we recommend including the following sections.
+**ros2env** is a Visual Studio Code extension that helps you manage isolated ROS2 environments with ease — start, stop, switch, and interact with them directly from your editor.
 
-## Features
-
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
-
-For example if there is an image subfolder under your extension project workspace:
-
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
-
-## Requirements
-
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
-
-## Extension Settings
-
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
+Whether you're working on multiple ROS2 projects or want to simplify environment switching, ros2env provides a seamless developer experience inside VS Code.
 
 ---
 
-## Following extension guidelines
+## 🚀 Features
 
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
+- 🔍 Discover available ROS2 environments
+- ▶️ Start or stop environments with one command
+- 🧠 Open a ready to use terminal inside the environment workspace (`ros2_ws`)
+- 🪟 Launch GUI apps from your environment (via browser-based interface)
+- ➕ Create or 🗑️ delete environments easily
+- 🧭 Treat each environment like a virtual ROS2 workspace
 
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
+---
 
-## Working with Markdown
+## 🧰 Requirements
 
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
+Before using ros2env, ensure the following is installed on your system:
 
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
+- [Visual Studio Code](https://code.visualstudio.com/)
+- [Docker](https://docs.docker.com/get-docker/) (used under the hood)
 
-## For more information
+> 💡 *Docker is required to isolate and manage environments behind the scenes. You don't need to know Docker to use ros2env.*
 
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
+---
 
-**Enjoy!**
+## 📦 Installation
+
+### 1. Download the latest release
+
+👉 [Download ros2env-x.x.x.vsix](https://github.com/yourusername/ros2env/releases)
+
+### 2. Install the extension in VS Code
+
+```bash
+code --install-extension ros2env-x.x.x.vsix
+```
+
+## 🧪 Getting Started
+
+Here’s how to start using **ros2env** to manage your ROS 2 environments.
+
+### 📁 1. Open or create a ROS2 project in VS Code
+
+Open any folder where you plan to work on your ROS2 project.
+
+> If you don’t have a workspace yet, no problem — `ros2env` creates one for you.
+
+---
+
+### ➕ 2. Create a new ROS2 Environment
+
+1. Open the **Command Palette** (`Ctrl+Shift+P` or `Cmd+Shift+P` on Mac)
+2. Run: `ROS2: Create Environment`
+3. Enter a name for your new environment (e.g., `my_ros2env`)
+4. Choose a ROS 2 distro (e.g., `humble`, `foxy`, etc.)
+5. Wait for setup to complete (you’ll see progress)
+
+🎉 A new isolated ROS2 environment will be created with a ready to use workspace.
+
+---
+
+### 🔁 3. Load (Switch to) an Environment
+
+1. Open Command Palette again
+2. Run: `ROS2: Load Environment`
+3. Select one of your previously created environments
+
+This will:
+- Start the environment (if stopped)
+- Stop any running environment (if different)
+- Attach an interactive terminal inside `ros2_ws`
+
+---
+
+### 💻 4. Open a ROS 2 Terminal
+
+- Run: `ROS2: Open Terminal`
+- This opens a terminal already inside your ROS2 workspace
+
+You're ready to build, source, and run ROS2 nodes like usual.
+
+---
+
+### 🖥️ 5. Launch GUI Tools
+
+- Run: `ROS2: Open GUI`
+- This opens a browser tab with access to graphical tools (RViz, Gazebo, etc.)
+
+> GUI support is provided via an embedded desktop accessible through your browser.
+
+---
+
+### 🛑 6. Stop an Environment
+
+- Run: `ROS2: Stop Environment`
+- This shuts down the running environment and closes terminals
+
+---
+
+### 🗑️ 7. Delete an Environment
+
+- Run: `ROS2: Delete Environment`
+- Select one or more environments to remove permanently
+
+⚠️ This will stop and delete the selected environments. Use with caution.
