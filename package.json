@@ -1,0 +1,68 @@
+{
+  "name": "ros2env",
+  "displayName": "ROS2 Environment Manager",
+  "description": "Manage ROS2 environments inside VS Code",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.98.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:ros2env.createEnvironment",
+    "onCommand:ros2env.deleteEnvironment",
+    "onCommand:ros2env.loadEnvironment",
+    "onCommand:ros2env.openGUI",
+    "onCommand:ros2env.openTerminal",
+    "onCommand:ros2env.stopEnvironment"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "ros2env.createEnvironment",
+        "title": "ROS2: Create Environment"
+      },
+      {
+        "command": "ros2env.deleteEnvironment",
+        "title": "ROS2: Delete Environment"
+      },
+      {
+        "command": "ros2env.loadEnvironment",
+        "title": "ROS2: Load Environment"
+      },
+      {
+        "command": "ros2env.openGUI",
+        "title": "ROS2: Open GUI"
+      },
+      {
+        "command": "ros2env.openTerminal",
+        "title": "ROS2: Open Terminal"
+      },
+      {
+        "command": "ros2env.stopEnvironment",
+        "title": "ROS2: Stop Environment"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.99.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "20.x",
+    "@typescript-eslint/eslint-plugin": "^8.28.0",
+    "@typescript-eslint/parser": "^8.28.0",
+    "eslint": "^9.23.0",
+    "typescript": "^5.8.2",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.4.1"
+  }
+}
