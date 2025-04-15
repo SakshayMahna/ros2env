@@ -4,6 +4,7 @@ import * as path from 'path';
 import { exec } from 'child_process';
 import { getRosContainers } from '../utils/dockerUtils';
 import { getDefaultWorkspacePath } from '../utils/state';
+import { withUserProgress } from '../utils/withUserProgress';
 
 export async function deleteEnvironment() {
     getRosContainers(async (containers) => {
@@ -34,14 +35,12 @@ export async function deleteEnvironment() {
 
         if (confirm !== 'Yes') { return; };
 
-        await vscode.window.withProgress({
-            location: vscode.ProgressLocation.Notification,
-            title: `Deleting ${selected.length} ROS2 Environment(s)...`,
-            cancellable: false
-        }, async (progress) => {
+        await withUserProgress(`Deleting ${selected.length} ROS2 Environment(s)...`, async (progress, token) => {
             let completed = 0;
 
             for (const item of selected) {
+                if (token.isCancellationRequested) { return; }
+
                 const { name, status } = item.container;
     
                 // Stop if running

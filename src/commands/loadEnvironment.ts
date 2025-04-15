@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { exec } from 'child_process';
 import { getRosContainers, checkDockerInstalled } from '../utils/dockerUtils';
 import { setActiveContainer } from '../utils/state';
+import { withUserProgress } from '../utils/withUserProgress';
 
 export async function loadEnvironment(context: vscode.ExtensionContext) {
     // Check if Docker is installed
@@ -18,11 +19,7 @@ export async function loadEnvironment(context: vscode.ExtensionContext) {
         return;
     }
     
-    await vscode.window.withProgress({
-        location: vscode.ProgressLocation.Notification,
-        title: 'Loading ROS2 Environment...',
-        cancellable: false
-    }, async (progress) => {
+    await withUserProgress('Loading ROS2 Environment...', async (progress, token) => {
         progress.report({ message: 'Loading available ROS2 environments...' });
 
         await new Promise<void>((resolve) => {
@@ -42,7 +39,7 @@ export async function loadEnvironment(context: vscode.ExtensionContext) {
                     { placeHolder: 'Select a ROS2 environment to switch to' }
                 );
     
-                if (!selected) { return; }
+                if (!selected || token.isCancellationRequested) { return; }
     
                 const selectedContainer = selected.container;
 

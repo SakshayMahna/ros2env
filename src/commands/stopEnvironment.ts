@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { exec } from 'child_process';
 import { getRosContainers, checkDockerInstalled } from '../utils/dockerUtils';
 import { getActiveContainer, setActiveContainer } from '../utils/state';
+import { withUserProgress } from '../utils/withUserProgress';
 
 export async function stopEnvironment() {
     const activeContainer = getActiveContainer();
@@ -17,11 +18,9 @@ export async function stopEnvironment() {
 
     if (confirmation !== 'Yes') { return; }
 
-    vscode.window.withProgress({
-        location: vscode.ProgressLocation.Notification,
-        title: `Stopping ROS2 Environment: ${activeContainer}`,
-        cancellable: false
-    }, async() => {
+    await withUserProgress(`Stopping ROS2 Environment: ${activeContainer}`, async(progress, token) => {
+        progress.report({ message: `Stopping environment: ${activeContainer}` });
+        
         await new Promise<void>((resolve) => {
             // Close previous terminals
             vscode.window.terminals.forEach(term => {

@@ -3,6 +3,7 @@ import { exec } from 'child_process';
 import { getRosContainers, checkDockerInstalled, pullImageIfNotPresent } from '../utils/dockerUtils';
 import { setActiveContainer } from '../utils/state';
 import { getEnvironmentFolderPath } from '../utils/dockerUtils';
+import { withUserProgress } from '../utils/withUserProgress';
 
 export async function createEnvironment(context: vscode.ExtensionContext) {
     // Check if Docker is installed
@@ -36,11 +37,9 @@ export async function createEnvironment(context: vscode.ExtensionContext) {
         vscode.window.showInformationMessage(`No workspace folder open. Environment will be created in ${workspacePath}`);
     }
 
-    await vscode.window.withProgress({
-        location: vscode.ProgressLocation.Notification,
-        title: `Create ROS2 Environment "${containerName}"...`,
-        cancellable: false
-    }, async (progress) => {
+    await withUserProgress(`Create ROS2 Environment "${containerName}"...`, async (progress, token) => {
+        if (token.isCancellationRequested) { return; }
+
         progress.report({ message: 'Checking existing environments...' });
 
         await new Promise<void>((resolve) => {
@@ -72,6 +71,8 @@ export async function createEnvironment(context: vscode.ExtensionContext) {
                 } catch {
                     return;
                 }
+
+                if (token.isCancellationRequested) { return; }
 
                 // Start new container
                 progress.report({ message: 'Starting environment...' });
