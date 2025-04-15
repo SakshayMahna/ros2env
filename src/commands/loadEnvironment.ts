@@ -91,7 +91,7 @@ export async function loadEnvironment(context: vscode.ExtensionContext) {
                         'exec', '-it',
                         '--user', 'ubuntu',
                         selectedContainer.name,
-                        'bash', '-c', 'cd /home/ubuntu/ros2_ws && bash'
+                        'bash', '-c', 'export DISPLAY=:1 && cd /home/ubuntu/ros2_ws && bash'
                     ]
                 });
     

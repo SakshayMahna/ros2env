@@ -32,12 +32,12 @@ Before using ros2env, ensure the following is installed on your system:
 
 ### 1. Download the latest release
 
-👉 [Download ros2env-x.x.x.vsix](https://github.com/yourusername/ros2env/releases)
+👉 [Download ros2env-0.0.1.vsix](https://github.com/SakshayMahna/ros2env/releases)
 
 ### 2. Install the extension in VS Code
 
 ```bash
-code --install-extension ros2env-x.x.x.vsix
+code --install-extension ros2env-0.0.1.vsix
 ```
 
 ## 🧪 Getting Started

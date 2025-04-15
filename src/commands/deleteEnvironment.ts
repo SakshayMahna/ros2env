@@ -1,6 +1,9 @@
 import * as vscode from 'vscode';
+import * as fs from 'fs';
+import * as path from 'path';
 import { exec } from 'child_process';
 import { getRosContainers } from '../utils/dockerUtils';
+import { getDefaultWorkspacePath } from '../utils/state';
 
 export async function deleteEnvironment() {
     getRosContainers(async (containers) => {
@@ -67,6 +70,16 @@ export async function deleteEnvironment() {
                         resolve();
                     });
                 });
+
+                // Delete associated workspace folder if exists
+                const folderPath = getDefaultWorkspacePath(name);
+                if (fs.existsSync(folderPath)){
+                    try {
+                        fs.rmSync(folderPath, { recursive: true, force: true });
+                    } catch(err) {
+                        vscode.window.showErrorMessage(`Failed to delete folder for ${name}`);
+                    }
+                }
 
                 completed++;
             }

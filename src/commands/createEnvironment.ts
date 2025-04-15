@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { exec } from 'child_process';
 import { getRosContainers, checkDockerInstalled, pullImageIfNotPresent } from '../utils/dockerUtils';
 import { setActiveContainer } from '../utils/state';
+import { getEnvironmentFolderPath } from '../utils/dockerUtils';
 
 export async function createEnvironment(context: vscode.ExtensionContext) {
     // Check if Docker is installed
@@ -30,10 +31,9 @@ export async function createEnvironment(context: vscode.ExtensionContext) {
     });
     if (!containerName) { return; }
 
-    const workspacePath = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
-    if (!workspacePath) {
-        vscode.window.showErrorMessage('No workspace folder open.');
-        return;
+    const workspacePath = getEnvironmentFolderPath(containerName);
+    if (!vscode.workspace.workspaceFolders) {
+        vscode.window.showInformationMessage(`No workspace folder open. Environment will be created in ${workspacePath}`);
     }
 
     await vscode.window.withProgress({
@@ -78,7 +78,7 @@ export async function createEnvironment(context: vscode.ExtensionContext) {
                 const dockerCmd = [
                     'docker run -dit',
                     `--name ${containerName}`,
-                    `-v "${workspacePath}:/home/ubuntu/ros2_ws"`,
+                    `-v "${workspacePath}:/home/ubuntu/ros2_ws/src"`,
                     `-p 6080:80`,
                     `--shm-size=512m`,
                     `tiryoh/ros2-desktop-vnc:${rosDistro}`
@@ -102,7 +102,7 @@ export async function createEnvironment(context: vscode.ExtensionContext) {
                             'exec', '-it', 
                             '--user', 'ubuntu',
                             containerName, 
-                            'bash', '-c', 'cd /home/ubuntu/ros2_ws && bash'
+                            'bash', '-c', 'export DISPLAY=:1 && cd /home/ubuntu/ros2_ws && bash'
                         ]
                     });
     

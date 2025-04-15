@@ -1,5 +1,21 @@
 import { exec } from 'child_process';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as os from 'os';
 import * as vscode from 'vscode';
+
+export function getEnvironmentFolderPath(envName: string): string {
+    const basePath = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath
+        ?? path.join(os.homedir(), '.ros2env');
+    
+    const fullPath = path.join(basePath, envName);
+
+    if (!fs.existsSync(fullPath)) {
+        fs.mkdirSync(fullPath, { recursive: true });
+    }
+
+    return fullPath;
+}
 
 export function getRosContainers(callback: (containers: { name: string, distro: string, status: string }[]) => void) {
     const cmd = `docker ps -a --format "{{.Names}}:::{{.Image}}:::{{.Status}}"`;

@@ -16,7 +16,7 @@ export function openTerminal() {
             'exec', '-it',
             '--user', 'ubuntu',
             activeRosContainer,
-            'bash', '-c', 'cd /home/ubuntu/ros2_ws && bash'
+            'bash', '-c', 'export DISPLAY=:1 && cd /home/ubuntu/ros2_ws && bash'
         ]
     });
     terminal.show();
