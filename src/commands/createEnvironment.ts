@@ -92,7 +92,9 @@ export async function createEnvironment(context: vscode.ExtensionContext) {
                     }
     
                     vscode.window.showInformationMessage(`ROS2 environment '${containerName}' created!`);
-                    setActiveContainer(containerName);
+                    setActiveContainer(containerName, context);
+
+                    vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(workspacePath), false);
 
                     // Attach terminal
                     progress.report({ message: 'Attaching terminal...' });
@@ -106,8 +108,8 @@ export async function createEnvironment(context: vscode.ExtensionContext) {
                             'bash', '-c', 'export DISPLAY=:1 && cd /home/ubuntu/ros2_ws && bash'
                         ]
                     });
-    
                     terminal.show();
+
                     vscode.window.showInformationMessage(`Created new ROS2 environment: ${containerName}`);
                     resolve();
                 });

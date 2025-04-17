@@ -3,10 +3,10 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { exec } from 'child_process';
 import { getRosContainers } from '../utils/dockerUtils';
-import { getDefaultWorkspacePath } from '../utils/state';
+import { getDefaultWorkspacePath, setActiveContainer } from '../utils/state';
 import { withUserProgress } from '../utils/withUserProgress';
 
-export async function deleteEnvironment() {
+export async function deleteEnvironment(context: vscode.ExtensionContext) {
     getRosContainers(async (containers) => {
         if (containers.length === 0) {
             vscode.window.showInformationMessage('No ROS2 environments found to delete.');
@@ -54,10 +54,20 @@ export async function deleteEnvironment() {
                                 term.dispose();
                             }
                         });
-                        
-                        exec(`docker stop ${name}`, () => resolve());
+
+                        exec(`docker stop ${name}`, (err, stdout, stderr) => {
+                            if (err) {
+                                vscode.window.showErrorMessage(`Failed to stop environment ${name}: ${stderr}`);
+                                return;
+                            }
+
+                            vscode.window.showInformationMessage(`ROS2 Environment ${name} stopped`);
+                            resolve();
+                        });
                     });
                 }
+
+                setActiveContainer('', context);
     
                 // Remove container
                 progress.report({ message: `Removing environment: ${name}...` });
@@ -69,6 +79,9 @@ export async function deleteEnvironment() {
                         resolve();
                     });
                 });
+
+                // Close workspace
+                vscode.commands.executeCommand('workbench.action.closeFolder');
 
                 // Delete associated workspace folder if exists
                 const folderPath = getDefaultWorkspacePath(name);

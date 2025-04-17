@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { exec } from 'child_process';
-import { getRosContainers, checkDockerInstalled } from '../utils/dockerUtils';
+import { getRosContainers, checkDockerInstalled, getMountedHostPath } from '../utils/dockerUtils';
 import { setActiveContainer } from '../utils/state';
 import { withUserProgress } from '../utils/withUserProgress';
 
@@ -77,7 +77,7 @@ export async function loadEnvironment(context: vscode.ExtensionContext) {
                         });
                     });
                 }
-                setActiveContainer(selectedContainer.name);
+                setActiveContainer(selectedContainer.name, context);
     
                 // Attach terminal
                 progress.report({ message: 'Attaching terminal...' });
@@ -91,8 +91,17 @@ export async function loadEnvironment(context: vscode.ExtensionContext) {
                         'bash', '-c', 'export DISPLAY=:1 && cd /home/ubuntu/ros2_ws && bash'
                     ]
                 });
-    
                 terminal.show();
+
+                const hostWorkspacePath = await getMountedHostPath(selectedContainer.name, '/home/ubuntu/ros2_ws/src');
+                if (hostWorkspacePath) {
+                    vscode.commands.executeCommand(
+                        'vscode.openFolder',
+                        vscode.Uri.file(hostWorkspacePath),
+                        false
+                    );
+                }
+
                 vscode.window.showInformationMessage(`Started ROS2 Environment: ${selectedContainer.name}`);
                 resolve();
             });

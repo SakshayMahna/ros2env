@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
 import { getActiveContainer } from '../utils/state';
 
-export async function openGUI() {
-    const activeRosContainer = getActiveContainer();
+export async function openGUI(context: vscode.ExtensionContext) {
+    const activeRosContainer = getActiveContainer(context);
     
     if(!activeRosContainer) {
         vscode.window.showErrorMessage('No active ROS2 environment found. Please create or load one.');

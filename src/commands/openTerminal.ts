@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
 import { getActiveContainer } from '../utils/state';
 
-export function openTerminal() {
-    const activeRosContainer = getActiveContainer();
+export function openTerminal(context: vscode.ExtensionContext) {
+    const activeRosContainer = getActiveContainer(context);
     
     if(!activeRosContainer) {
         vscode.window.showErrorMessage('No active ROS2 environment found. Please create or load one.');

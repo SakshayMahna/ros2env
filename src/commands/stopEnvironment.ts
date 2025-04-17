@@ -4,8 +4,8 @@ import { getRosContainers, checkDockerInstalled } from '../utils/dockerUtils';
 import { getActiveContainer, setActiveContainer } from '../utils/state';
 import { withUserProgress } from '../utils/withUserProgress';
 
-export async function stopEnvironment() {
-    const activeContainer = getActiveContainer();
+export async function stopEnvironment(context: vscode.ExtensionContext) {
+    const activeContainer = getActiveContainer(context);
 
     if (!activeContainer) {
         vscode.window.showWarningMessage('No active ROS2 environment found to stop.');
@@ -35,10 +35,14 @@ export async function stopEnvironment() {
                     return;
                 }
 
-                setActiveContainer('');
                 vscode.window.showInformationMessage(`ROS2 Environment ${activeContainer} stopped`);
                 resolve();
             });
+
+            setActiveContainer('', context);
+
+            // Close workspace
+            vscode.commands.executeCommand('workbench.action.closeFolder');
         });
     });
 }

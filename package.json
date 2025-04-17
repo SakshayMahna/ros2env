@@ -1,9 +1,10 @@
 {
   "name": "ros2env",
+  "publisher": "SakshayMahna",
   "displayName": "ROS2 Environment Manager",
   "description": "Manage ROS2 environments inside VS Code",
   "repository": "https://github.com/SakshayMahna/ros2env.git",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "engines": {
     "vscode": "^1.99.0"
   },
@@ -11,6 +12,7 @@
     "Other"
   ],
   "activationEvents": [
+    "onStartupFinished",
     "onCommand:ros2env.createEnvironment",
     "onCommand:ros2env.deleteEnvironment",
     "onCommand:ros2env.loadEnvironment",

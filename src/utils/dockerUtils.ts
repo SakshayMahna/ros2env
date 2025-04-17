@@ -5,16 +5,30 @@ import * as os from 'os';
 import * as vscode from 'vscode';
 
 export function getEnvironmentFolderPath(envName: string): string {
-    const basePath = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath
-        ?? path.join(os.homedir(), '.ros2env');
-    
-    const fullPath = path.join(basePath, envName);
+    const fullPath = path.join(os.homedir(), '.ros2env', envName);
 
     if (!fs.existsSync(fullPath)) {
         fs.mkdirSync(fullPath, { recursive: true });
     }
 
     return fullPath;
+}
+
+export function getMountedHostPath(containerName: string, containerMountPath: string): Promise<string | undefined> {
+    return new Promise((resolve) => {
+        exec(`docker inspect ${containerName}`, (error, stdout) => {
+            if (error) { return resolve(undefined); };
+
+            try {
+                const data = JSON.parse(stdout);
+                const mounts = data[0]?.Mounts || [];
+                const mount = mounts.find((m: any) => m.Destination === containerMountPath);
+                resolve(mount?.Source);
+            } catch {
+                resolve(undefined);
+            }
+        });
+    });
 }
 
 export function getRosContainers(callback: (containers: { name: string, distro: string, status: string }[]) => void) {
