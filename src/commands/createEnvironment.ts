@@ -20,7 +20,7 @@ export async function createEnvironment(context: vscode.ExtensionContext) {
         return;
     }
 
-    const rosDistros = ['rolling', 'humble', 'iron', 'galactic'];
+    const rosDistros = ['rolling', 'humble', 'iron', 'jazzy'];
     const rosDistro = await vscode.window.showQuickPick(rosDistros, {
         placeHolder: 'Select a ROS2 distribution',
     });
@@ -66,11 +66,8 @@ export async function createEnvironment(context: vscode.ExtensionContext) {
     
                 // Pull image if not already present
                 const image = `tiryoh/ros2-desktop-vnc:${rosDistro}`;
-                try {
-                    await pullImageIfNotPresent(image);
-                } catch {
-                    return;
-                }
+                progress.report({ message: 'ROS2 Docker Image not found locally. Pulling from DockerHub. This may take a few minutes depending on your internet speed.' });
+                await pullImageIfNotPresent(image);
 
                 if (token.isCancellationRequested) { return; }
 

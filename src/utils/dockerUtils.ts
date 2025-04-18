@@ -74,7 +74,7 @@ export function pullImageIfNotPresent(image: string): Promise<void> {
                 cancellable: false
             }, async (progress) => {
                 return new Promise<void>((pullResolve) => {
-                    exec(`docker pull ${image}`, (pullErr, stdout, stderr) => {
+                    const pull = exec(`docker pull ${image}`, (pullErr, stdout, stderr) => {
                         if (pullErr) {
                             vscode.window.showErrorMessage(`Failed to pull Docker image ${image}`);
                             return reject();
@@ -82,7 +82,13 @@ export function pullImageIfNotPresent(image: string): Promise<void> {
 
                         pullResolve();
                     });
+
+                    pull.stdout?.on('data', (data) => {
+                        progress.report({ message: data.trim().substring(0, 100) });
+                    });
                 });
+            }).then(() => {
+                resolve();
             });
         });
     });
