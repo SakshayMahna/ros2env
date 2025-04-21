@@ -39,7 +39,13 @@ export function getRosContainers(callback: (containers: { name: string, distro: 
             return;
         }
 
-        const lines = stdout.trim().split('\n');
+        const trimmedOutput = stdout.trim();
+        if (!trimmedOutput) {
+            callback([]);
+            return;
+        }
+
+        const lines = trimmedOutput.split('\n');
         const rosContainers = lines
             .map(line => {
                 const [name, image, status] = line.split(':::');
