@@ -4,6 +4,8 @@
 
 Whether you're working on multiple ROS2 projects or want to simplify environment switching, ros2env provides a seamless developer experience inside VS Code.
 
+🎥 [Step by Step Installation Video (Watch here)](https://youtu.be/mt8DTLkWNyA)
+
 🎥 [Demo Video (Watch here)](https://youtu.be/03XxIxZxtrA)
 
 ---
