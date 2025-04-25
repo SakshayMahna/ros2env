@@ -5,11 +5,16 @@ import { loadEnvironment } from './commands/loadEnvironment';
 import { openGUI } from './commands/openGUI';
 import { openTerminal } from './commands/openTerminal';
 import { stopEnvironment } from './commands/stopEnvironment';
-import { getActiveContainer } from './utils/state';
+import { getActiveContainer, initializeState } from './utils/state';
 import { disposeStatusBar, initializeStatusBar, showStatusBar } from './utils/statusBar';
+import { createDockerTerminal, getDockerCommand } from './utils/dockerUtils';
 
 export function activate(context: vscode.ExtensionContext) {
     console.log('ROS2 Environment Manager is now active!');
+
+    // Initialize state
+    initializeState();
+    const dockerCmd = getDockerCommand();
 
     // Initialize status bar item
     initializeStatusBar();
@@ -20,16 +25,7 @@ export function activate(context: vscode.ExtensionContext) {
         console.log(`Found active environment: ${activeContainer}`);
         
         // Terminal
-        const terminal = vscode.window.createTerminal({
-            name: `ROS2: ${activeContainer}`,
-            shellPath: 'docker',
-            shellArgs: [
-                'exec', '-it',
-                '--user', 'ubuntu',
-                activeContainer,
-                'bash', '-c', 'export DISPLAY=:1 && cd /home/ubuntu/ros2_ws && bash'
-            ]
-        });
+        const terminal = createDockerTerminal(activeContainer);
         terminal.show();
 
         // Status Bar
