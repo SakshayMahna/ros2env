@@ -25,7 +25,7 @@ Whether you're working on multiple ROS2 projects or want to simplify environment
 
 Before using ros2env, ensure the following is installed on your system:
 
-- [Visual Studio Code](https://code.visualstudio.com/)
+- [Visual Studio Code](https://code.visualstudio.com/) ( >= v1.80.0)
 - [Docker](https://docs.docker.com/get-docker/) (used under the hood)
 
 > 💡 *Docker is required to isolate and manage environments behind the scenes. You don't need to know Docker to use ros2env.*
