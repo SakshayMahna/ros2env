@@ -1,7 +1,8 @@
 import * as vscode from 'vscode';
 import { exec } from 'child_process';
 import { getRosContainers, checkDockerInstalled, pullImageIfNotPresent,
-         getEnvironmentFolderPath, getDockerCommand
+         getEnvironmentFolderPath, getDockerCommand,
+         createDockerTerminal
  } from '../utils/dockerUtils';
 import { setActiveContainer } from '../utils/state';
 import { withUserProgress } from '../utils/withUserProgress';
@@ -98,16 +99,7 @@ export async function createEnvironment(context: vscode.ExtensionContext) {
 
                     // Attach terminal
                     progress.report({ message: 'Attaching terminal...' });
-                    const terminal = vscode.window.createTerminal({
-                        name: `ROS2: ${containerName}`,
-                        shellPath: dockerCmd,
-                        shellArgs: [
-                            'exec', '-it', 
-                            '--user', 'ubuntu',
-                            containerName, 
-                            'bash', '-c', 'export DISPLAY=:1 && cd /home/ubuntu/ros2_ws && bash'
-                        ]
-                    });
+                    const terminal = createDockerTerminal(containerName);
                     terminal.show();
 
                     vscode.window.showInformationMessage(`Created new ROS2 environment: ${containerName}`);

@@ -14,7 +14,8 @@ export function getEnvironmentFolderPath(envName: string): string {
 
     if (getState().isWsl) {
         try {
-            const wslPath = execSync(`wsl wslpath -a ${fullPath}`).toString().trim();
+            const normalizedPath = fullPath.replace(/\\/g, '/');
+            const wslPath = execSync(`wsl wslpath -a "${normalizedPath}"`).toString().trim();
             fullPath = wslPath;
         } catch {
             console.error('Failed to convert path to WSL format!');
@@ -43,6 +44,31 @@ export function getMountedHostPath(containerName: string, containerMountPath: st
                 resolve(undefined);
             }
         });
+    });
+}
+
+export function createDockerTerminal(containerName: string, title?: string): vscode.Terminal {
+    const isWsl = getState().isWsl;
+
+    const shellPath = isWsl ? 'wsl' : 'docker';
+    const shellArgs = isWsl 
+        ? [
+            'docker', 'exec', '-it',
+            '--user', 'ubuntu',
+            containerName,
+            'bash', '-c', 'export DISPLAY=:1 && cd /home/ubuntu/ros2_ws && bash'
+        ]
+        : [
+            'exec', '-it',
+            '--user', 'ubuntu',
+            containerName,
+            'bash', '-c', 'export DISPLAY=:1 && cd /home/ubuntu/ros2_ws && bash'
+        ];
+
+    return vscode.window.createTerminal({
+        name: title ?? `ROS2: ${containerName}`,
+        shellPath,
+        shellArgs
     });
 }
 

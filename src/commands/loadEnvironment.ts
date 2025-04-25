@@ -1,7 +1,8 @@
 import * as vscode from 'vscode';
 import { exec } from 'child_process';
 import { getRosContainers, checkDockerInstalled, 
-         getMountedHostPath, getDockerCommand } from '../utils/dockerUtils';
+         getMountedHostPath, getDockerCommand, 
+         createDockerTerminal} from '../utils/dockerUtils';
 import { setActiveContainer } from '../utils/state';
 import { withUserProgress } from '../utils/withUserProgress';
 
@@ -84,16 +85,7 @@ export async function loadEnvironment(context: vscode.ExtensionContext) {
     
                 // Attach terminal
                 progress.report({ message: 'Attaching terminal...' });
-                const terminal = vscode.window.createTerminal({
-                    name: `ROS2: ${selectedContainer.name}`,
-                    shellPath: dockerCmd,
-                    shellArgs: [
-                        'exec', '-it',
-                        '--user', 'ubuntu',
-                        selectedContainer.name,
-                        'bash', '-c', 'export DISPLAY=:1 && cd /home/ubuntu/ros2_ws && bash'
-                    ]
-                });
+                const terminal = createDockerTerminal(selectedContainer.name);
                 terminal.show();
 
                 const hostWorkspacePath = await getMountedHostPath(selectedContainer.name, '/home/ubuntu/ros2_ws/src');

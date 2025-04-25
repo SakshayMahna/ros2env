@@ -73,7 +73,7 @@ export async function deleteEnvironment(context: vscode.ExtensionContext) {
                 // Remove container
                 progress.report({ message: `Removing environment: ${name}...` });
                 await new Promise<void>((resolve) => {
-                    exec(`docker rm ${name}`, (err) => {
+                    exec(`${dockerCmd} rm ${name}`, (err) => {
                         if (err) {
                             vscode.window.showErrorMessage(`Failed to delete ${name}`);
                         }
