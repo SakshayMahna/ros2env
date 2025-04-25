@@ -1,10 +1,13 @@
 import * as vscode from 'vscode';
 import { exec } from 'child_process';
-import { getRosContainers, checkDockerInstalled, getMountedHostPath } from '../utils/dockerUtils';
+import { getRosContainers, checkDockerInstalled, 
+         getMountedHostPath, getDockerCommand } from '../utils/dockerUtils';
 import { setActiveContainer } from '../utils/state';
 import { withUserProgress } from '../utils/withUserProgress';
 
 export async function loadEnvironment(context: vscode.ExtensionContext) {
+    const dockerCmd = getDockerCommand();
+
     // Check if Docker is installed
     const isDockerAvailable = await checkDockerInstalled();
     if (!isDockerAvailable) {
@@ -54,7 +57,7 @@ export async function loadEnvironment(context: vscode.ExtensionContext) {
                 if (currentRunning && currentRunning.name !== selectedContainer.name) {
                     progress.report({ message: `Stopping current environment: ${currentRunning.name}` });
                     await new Promise<void>((resolve) => {
-                        exec(`docker stop ${currentRunning.name}`, (err) => {
+                        exec(`${dockerCmd} stop ${currentRunning.name}`, (err) => {
                             if (err) {
                                 vscode.window.showErrorMessage(`Failed to stop environment ${currentRunning.name}`);
                                 return;
@@ -68,7 +71,7 @@ export async function loadEnvironment(context: vscode.ExtensionContext) {
                 if (!selectedContainer.status.includes('Up')) {
                     progress.report({ message: `Starting selected environment: ${selectedContainer.name}` });
                     await new Promise<void>((resolve) => {
-                        exec(`docker start ${selectedContainer.name}`, (err) => {
+                        exec(`${dockerCmd} start ${selectedContainer.name}`, (err) => {
                             if (err) {
                                 vscode.window.showErrorMessage(`Failed to start environment ${selectedContainer.name}`);
                                 return;
@@ -83,7 +86,7 @@ export async function loadEnvironment(context: vscode.ExtensionContext) {
                 progress.report({ message: 'Attaching terminal...' });
                 const terminal = vscode.window.createTerminal({
                     name: `ROS2: ${selectedContainer.name}`,
-                    shellPath: 'docker',
+                    shellPath: dockerCmd,
                     shellArgs: [
                         'exec', '-it',
                         '--user', 'ubuntu',

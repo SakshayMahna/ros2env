@@ -1,13 +1,16 @@
 import * as vscode from 'vscode';
 import { exec } from 'child_process';
-import { getRosContainers, checkDockerInstalled, pullImageIfNotPresent } from '../utils/dockerUtils';
+import { getRosContainers, checkDockerInstalled, pullImageIfNotPresent,
+         getEnvironmentFolderPath, getDockerCommand
+ } from '../utils/dockerUtils';
 import { setActiveContainer } from '../utils/state';
-import { getEnvironmentFolderPath } from '../utils/dockerUtils';
 import { withUserProgress } from '../utils/withUserProgress';
 
 export async function createEnvironment(context: vscode.ExtensionContext) {
     // Check if Docker is installed
     const isDockerAvailable = await checkDockerInstalled();
+    const dockerCmd = getDockerCommand();
+
     if (!isDockerAvailable) {
         const action = await vscode.window.showQuickPick(['Open Docker Install Guide'], {
             placeHolder: 'Docker not found. Select an action:'
@@ -60,7 +63,7 @@ export async function createEnvironment(context: vscode.ExtensionContext) {
                 if (currentRunning) {
                     progress.report({ message: `Stopping current environment: ${currentRunning.name}` });
                     await new Promise<void>((resolve) => {
-                        exec(`docker stop ${currentRunning.name}`, () => resolve());
+                        exec(`${dockerCmd} stop ${currentRunning.name}`, () => resolve());
                     });
                 }
     
@@ -73,8 +76,8 @@ export async function createEnvironment(context: vscode.ExtensionContext) {
 
                 // Start new container
                 progress.report({ message: 'Starting environment...' });
-                const dockerCmd = [
-                    'docker run -dit',
+                const dockerShellCmd = [
+                    `${dockerCmd} run -dit`,
                     `--name ${containerName}`,
                     `-v "${workspacePath}:/home/ubuntu/ros2_ws/src"`,
                     `-p 6080:80`,
@@ -82,7 +85,7 @@ export async function createEnvironment(context: vscode.ExtensionContext) {
                     `tiryoh/ros2-desktop-vnc:${rosDistro}`
                 ].join(' ');
     
-                exec(dockerCmd, (error, stdout, stderr) => {
+                exec(dockerShellCmd, (error, stdout, stderr) => {
                     if (error) {
                         vscode.window.showErrorMessage(`Failed to start environment: ${stderr}`);
                         return;
@@ -97,7 +100,7 @@ export async function createEnvironment(context: vscode.ExtensionContext) {
                     progress.report({ message: 'Attaching terminal...' });
                     const terminal = vscode.window.createTerminal({
                         name: `ROS2: ${containerName}`,
-                        shellPath: 'docker',
+                        shellPath: dockerCmd,
                         shellArgs: [
                             'exec', '-it', 
                             '--user', 'ubuntu',

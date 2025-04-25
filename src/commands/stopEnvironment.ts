@@ -1,11 +1,12 @@
 import * as vscode from 'vscode';
 import { exec } from 'child_process';
-import { getRosContainers, checkDockerInstalled } from '../utils/dockerUtils';
+import { getRosContainers, checkDockerInstalled, getDockerCommand } from '../utils/dockerUtils';
 import { getActiveContainer, setActiveContainer } from '../utils/state';
 import { withUserProgress } from '../utils/withUserProgress';
 
 export async function stopEnvironment(context: vscode.ExtensionContext) {
     const activeContainer = getActiveContainer(context);
+    const dockerCmd = getDockerCommand();
 
     if (!activeContainer) {
         vscode.window.showWarningMessage('No active ROS2 environment found to stop.');
@@ -29,7 +30,7 @@ export async function stopEnvironment(context: vscode.ExtensionContext) {
                 }
             });
 
-            exec(`docker stop ${activeContainer}`, (err, stdout, stderr) => {
+            exec(`${dockerCmd} stop ${activeContainer}`, (err, stdout, stderr) => {
                 if (err) {
                     vscode.window.showErrorMessage(`Failed to stop environment ${activeContainer}: ${stderr}`);
                     return;

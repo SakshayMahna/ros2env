@@ -2,11 +2,12 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
 import { exec } from 'child_process';
-import { getRosContainers } from '../utils/dockerUtils';
+import { getRosContainers, getDockerCommand } from '../utils/dockerUtils';
 import { getDefaultWorkspacePath, setActiveContainer } from '../utils/state';
 import { withUserProgress } from '../utils/withUserProgress';
 
 export async function deleteEnvironment(context: vscode.ExtensionContext) {
+    const dockerCmd = getDockerCommand();
     getRosContainers(async (containers) => {
         if (containers.length === 0) {
             vscode.window.showInformationMessage('No ROS2 environments found to delete.');
@@ -55,7 +56,7 @@ export async function deleteEnvironment(context: vscode.ExtensionContext) {
                             }
                         });
 
-                        exec(`docker stop ${name}`, (err, stdout, stderr) => {
+                        exec(`${dockerCmd} stop ${name}`, (err, stdout, stderr) => {
                             if (err) {
                                 vscode.window.showErrorMessage(`Failed to stop environment ${name}: ${stderr}`);
                                 return;
