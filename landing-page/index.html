@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ros2env: Simplifying ROS2 Development</title>
+    <link href="https://fonts.googleapis.com/css2?family=Helvetica:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: Helvetica, sans-serif;
+            background-color: black;
+            color: white;
+            height: 100%;
+            overflow-x: hidden;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+        }
+        .typewriter-container {
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        a {
+            margin-top: 20px;
+            color: white;
+            border: 1px solid white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-flex;
+            align-items: center;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        a:hover {
+            background-color: white;
+            color: black;
+            box-shadow: 0 0 10px white;
+        }
+
+        .button-row {
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .button-row a {
+            display: inline-flex;
+            align-items: center;
+            color: white;
+            border: 1px solid white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            transition: background 0.3s, box-shadow 0.3s;
+        }
+
+        .button-row a:hover {
+            background: white;
+            color: black;
+            box-shadow: 0 0 10px white;
+        }
+
+
+        section {
+            height: 100vh;
+            width: 100%;
+            scroll-snap-align: start;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            padding: 20px;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 1s ease, transform 1s ease;
+            scroll-snap-align: start;
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Center the testimonial, get started, and feedback sections */
+        section.content.only-text {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        section.content.only-text .intro-text {
+            padding: 0;
+            max-width: 800px;
+        }
+
+        section.content.only-text .intro-text h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        section.content.only-text .intro-text p {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+
+        .only-text {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 60px;
+        }
+        .only-text .intro-text {
+            padding: 0;
+            max-width: 800px;
+        }
+
+
+
+        /* First Section Specific */
+        .hero {
+            background-color: black;
+            flex-direction: column;
+        }
+
+        .hero h1 {
+            font-size: 6vw;
+            margin: 0;
+        }
+
+        .hero a {
+            margin-top: 20px;
+            color: white;
+            border: 1px solid white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            transition: background 0.3s;
+        }
+
+        .hero a:hover {
+            background: white;
+            color: black;
+        }
+
+        .content {
+            background-color: #111;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            padding: 60px;
+            align-items: center;
+            text-align: left;
+        }
+
+        .intro-text {
+            word-wrap: break-word;
+            font-size: 1.5rem;
+            line-height: 1.6;
+            padding-right: 1.5em;
+        }
+
+        .intro-text h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .video-container iframe {
+            opacity: 0;
+            animation: fadeIn 1s forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- First Section -->
+    <section class="hero visible">
+        <div class="typewriter-container">
+            <h1><span id="typewriter"></span></h1>
+        </div>
+        <p class="intro-text">
+            Setting up different ROS2 distributions, handling system conflicts, and managing Docker manually can be painful.<br>
+            <strong>ros2env</strong> makes it easy, fast, and clean to start coding immediately inside VSCode - just like modern web developers do.
+        </p>
+        <a href="https://github.com/SakshayMahna/ros2env" target="_blank">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub" style="width:20px; height:20px; margin-right:10px; filter: invert(1);">
+            View on GitHub
+        </a>
+    </section>
+
+    <!-- Second Section -->
+    <section class="content">
+        <div class="intro-text">
+            <h2>✨ Features</h2>
+            <ul style="list-style-type: none;">
+                <li>✅ 1-Click ROS2 Environment Creation</li>
+                <li>✅ Automatic Workspace Mounting</li>
+                <li>✅ Built-in GUI Support</li>
+                <li>✅ Seamless Environment Switching</li>
+                <li>✅ Full System Isolation</li>
+            </ul>
+        </div>
+        <div>
+            <div class="video-container">
+                <iframe 
+                    src="https://www.youtube.com/embed/L_r-QvbI5Dc?autoplay=0&mute=1&loop=1&playlist=L_r-QvbI5Dc" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- Third Section -->
+    <section class="content">
+        <div class="intro-text">
+            <h2>🚀 Quick Start</h2>
+            <ol>
+                <li>Install <strong>Docker Desktop</strong> on your machine.</li>
+                <li>Install <strong>Visual Studio Code</strong>.</li>
+                <li>Download and install <strong>ros2env</strong> extension from GitHub.</li>
+                <li>Create your first ROS2 environment with just a single <strong>command</strong>.</li>
+                <li>Start building ROS2 projects without setup headaches!</li>
+            </ol>
+        </div>
+        <div>
+            <div class="video-container">
+                <iframe 
+                    src="https://www.youtube.com/embed/mt8DTLkWNyA?autoplay=0&mute=1&loop=1&playlist=mt8DTLkWNyA" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="hero visible">
+        <div class="intro-text">
+            <h2>💬 What Early Users Are Saying</h2>
+            <p>"Solves a huge pain point for a lot of ROS Developers. Real game changer for Windows!" - <strong>Enzo Ghisoni</strong></p>
+            <p>"Works like magic, setting up ROS2 has never been this effortless." - <strong>Ashutosh Kumar</strong></p>
+        </div>
+    </section>
+
+    <!-- Get Started Now Section -->
+    <section class="hero visible">
+        <div class="intro-text">
+            <h2>🔗 Get Started Now</h2>
+            <p>Start coding with ROS2 instantly. No system pollution. No complicated setup.</p>
+            <div class="button-row">
+                <a href="https://github.com/SakshayMahna/ros2env" target="_blank">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub" style="width:20px; height:20px; margin-right:10px; filter: invert(1);">
+                    View on GitHub
+                </a>
+                <a href="https://www.youtube.com/watch?v=mt8DTLkWNyA" target="_blank">
+                    📺 Watch Tutorial
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Feedback and Community Section -->
+    <section class="hero visible">
+        <div class="intro-text">
+            <h2>🤝 Feedback & Community</h2>
+            <p>Have ideas? Found a bug? Want to contribute?</p>
+            <p>We'd love to hear from you! 🌟</p>
+            <div class="button-row">
+                <a href="https://github.com/SakshayMahna/ros2env/discussions" target="_blank">
+                    💬 Join Discussions
+                </a>
+                <a href="https://github.com/SakshayMahna/ros2env/issues" target="_blank">
+                    🐛 Report Issue
+                </a>
+            </div>
+            <p>Let's make ROS2 development smoother for everyone 🚀</p>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+    <script>
+        var typed = new Typed('#typewriter', {
+            strings: ['⚡ Instant ROS2',
+                      '🛠️ No Setup Hassle',
+                      '🛡️ Isolated Environments',
+                      '💻 Ready to Code.',
+                      '🔧 Zero System Mess'],
+            typeSpeed: 50,
+            backSpeed: 25,
+            loop: true
+        });
+
+        // Fade-in Animation on Scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.3
+        });
+
+        document.querySelectorAll('section').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+
+</body>
+</html>
