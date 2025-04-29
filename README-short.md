@@ -6,7 +6,7 @@ Whether you're working on multiple ROS2 projects or want to simplify environment
 
 🌐 [Visit the Landing Page](https://sakshaymahna.github.io/ros2env/) – Explore features, guides, and videos in one place.
 
-![ros2env in action](docs/screenshot.png)
+![ros2env in action](https://raw.githubusercontent.com/SakshayMahna/ros2env/refs/heads/main/docs/screenshot.png)
 
 ---
 
