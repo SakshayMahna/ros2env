@@ -3,8 +3,11 @@
   "publisher": "SakshayMahna",
   "displayName": "ROS2 Environment Manager",
   "description": "Manage ROS2 environments inside VS Code",
-  "repository": "https://github.com/SakshayMahna/ros2env.git",
-  "version": "0.0.4",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SakshayMahna/ros2env.git"
+  },
+  "version": "0.0.5",
   "engines": {
     "vscode": "^1.80.0"
   },
