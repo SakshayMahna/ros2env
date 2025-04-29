@@ -1,8 +1,9 @@
 {
   "name": "ros2env",
   "publisher": "SakshayMahna",
-  "displayName": "ROS2 Environment Manager",
-  "description": "Manage ROS2 environments inside VS Code",
+  "displayName": "ros2env - ROS2 Environment Manager",
+  "description": "Simplify ROS2 development using isolated Docker environments in VS Code with 1-click management.",
+  "icon": "icon.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/SakshayMahna/ros2env.git"
@@ -12,8 +13,20 @@
     "vscode": "^1.80.0"
   },
   "categories": [
+    "Programming Languages",
     "Other"
   ],
+  "keywords": [
+    "ROS2",
+    "Robotics",
+    "Docker",
+    "Environment",
+    "VSCode"
+  ],
+  "galleryBanner": {
+    "color": "#1c1c1c",
+    "theme": "dark"
+  },
   "activationEvents": [
     "onStartupFinished",
     "onCommand:ros2env.createEnvironment",
