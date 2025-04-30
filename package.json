@@ -83,5 +83,8 @@
     "@vscode/test-electron": "^2.4.1",
     "eslint": "^9.23.0",
     "typescript": "^5.8.2"
+  },
+  "dependencies": {
+    "fs-extra": "^11.3.0"
   }
 }

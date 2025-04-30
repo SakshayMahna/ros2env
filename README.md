@@ -83,25 +83,25 @@ code --install-extension ros2env-0.0.5.vsix
 
 Here’s how to start using **ros2env** to manage your ROS 2 environments.
 
-### 📁 1. Open or create a ROS2 project in VS Code
 
-Open any folder where you plan to work on your ROS2 project.
+### ➕ 1. Create a new ROS2 Environment
 
-> If you don’t have a workspace yet, no problem — `ros2env` creates one for you.
+1. Open the **Command Palette** (`Ctrl+Shift+P` or `Cmd+Shift+P` on Mac)  
+2. Run: `ROS2: Create Environment`  
+3. Enter a name for your new environment (e.g., `my_ros2env`)  
+4. Choose a ROS 2 distro (e.g., `humble`, `jazzy`, etc.)  
+5. **(Optional)** You will be prompted to select one or more folders containing existing ROS 2 packages. These folders will be copied into the new environment’s workspace (`ros2_ws/src`).  
+   - You can skip this step if you don't want to add anything for now.  
+6. Wait for setup to complete (you’ll see progress indicators)
+
+🎉 A new isolated ROS2 environment will be created with a ready-to-use workspace.
+
+> You can later add more packages by simply copying them into the workspace directory open in VSCode.
+
+**💡 For advanced Docker users: a volume is mounted to the Docker container from `/<home_directory>/.ros2env/<environment_name>` to persist changes across sessions.**
 
 
-### ➕ 2. Create a new ROS2 Environment
-
-1. Open the **Command Palette** (`Ctrl+Shift+P` or `Cmd+Shift+P` on Mac)
-2. Run: `ROS2: Create Environment`
-3. Enter a name for your new environment (e.g., `my_ros2env`)
-4. Choose a ROS 2 distro (e.g., `humble`, `foxy`, etc.)
-5. Wait for setup to complete (you’ll see progress)
-
-🎉 A new isolated ROS2 environment will be created with a ready to use workspace.
-
-
-### 🔁 3. Load (Switch to) an Environment
+### 🔁 2. Load (Switch to) an Environment
 
 1. Open Command Palette again
 2. Run: `ROS2: Load Environment`
@@ -113,7 +113,7 @@ This will:
 - Attach an interactive terminal inside `ros2_ws`
 
 
-### 💻 4. Open a ROS 2 Terminal
+### 💻 3. Open a ROS 2 Terminal
 
 - Run: `ROS2: Open Terminal`
 - This opens a terminal already inside your ROS2 workspace
@@ -121,7 +121,7 @@ This will:
 You're ready to build, source, and run ROS2 nodes like usual.
 
 
-### 🖥️ 5. Launch GUI Tools
+### 🖥️ 4. Launch GUI Tools
 
 - Run: `ROS2: Open GUI`
 - This opens a browser tab with access to graphical tools (RViz, Gazebo, etc.)
@@ -129,18 +129,18 @@ You're ready to build, source, and run ROS2 nodes like usual.
 > GUI support is provided via an embedded desktop accessible through your browser.
 
 
-### 🛑 6. Stop an Environment
+### 🛑 5. Stop an Environment
 
 - Run: `ROS2: Stop Environment`
 - This shuts down the running environment and closes terminals
 
 
-### 🗑️ 7. Delete an Environment
+### 🗑️ 6. Delete an Environment
 
 - Run: `ROS2: Delete Environment`
 - Select one or more environments to remove permanently
 
-⚠️ This will stop and delete the selected environments. Use with caution.
+⚠️ This will stop and delete the selected environments (along with the code). Use with caution.
 
 
 ---
