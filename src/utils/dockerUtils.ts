@@ -9,8 +9,16 @@ export function getDockerCommand(): string {
     return getState().isWsl ? 'wsl docker' : 'docker';
 }
 
-export function getEnvironmentFolderPath(envName: string): string {
-    let fullPath = path.join(os.homedir(), '.ros2env', envName);
+export function getNormalizedFolderPath(basePath?: string, subFolder?: string): string {
+    let fullPath = basePath || path.join(os.homedir(), '.ros2env');
+
+    if (subFolder) {
+        fullPath = path.join(fullPath, subFolder);
+    }
+
+    if (!fs.existsSync(fullPath)) {
+        fs.mkdirSync(fullPath, { recursive: true });
+    }
 
     if (getState().isWsl) {
         try {
@@ -20,10 +28,6 @@ export function getEnvironmentFolderPath(envName: string): string {
         } catch {
             console.error('Failed to convert path to WSL format!');
         }
-    }
-
-    if (!fs.existsSync(fullPath)) {
-        fs.mkdirSync(fullPath, { recursive: true });
     }
 
     return fullPath;
@@ -56,13 +60,13 @@ export function createDockerTerminal(containerName: string, title?: string): vsc
             'docker', 'exec', '-it',
             '--user', 'ubuntu',
             containerName,
-            'bash', '-c', 'export DISPLAY=:1 && cd /home/ubuntu/ros2_ws && bash'
+            'bash', '-c', 'export DISPLAY=:1 && cd /home/ubuntu/ros2 && bash'
         ]
         : [
             'exec', '-it',
             '--user', 'ubuntu',
             containerName,
-            'bash', '-c', 'export DISPLAY=:1 && cd /home/ubuntu/ros2_ws && bash'
+            'bash', '-c', 'export DISPLAY=:1 && cd /home/ubuntu/ros2 && bash'
         ];
 
     return vscode.window.createTerminal({

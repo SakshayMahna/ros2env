@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { exec } from 'child_process';
 import { getRosContainers, checkDockerInstalled, pullImageIfNotPresent,
-         getEnvironmentFolderPath, getDockerCommand,
+         getNormalizedFolderPath, getDockerCommand,
          createDockerTerminal
  } from '../utils/dockerUtils';
 import { setActiveContainer } from '../utils/state';
@@ -36,34 +36,22 @@ export async function createEnvironment(context: vscode.ExtensionContext) {
     });
     if (!containerName) { return; }
 
-    const workspacePath = getEnvironmentFolderPath(containerName);
+    // Choose between default or custom workspace
+    const useDefault = await vscode.window.showQuickPick(['Default workspace', 'Pick your own'], {
+        placeHolder: 'Which workspace do you want to mount?'
+    });
 
-    // Add existing packages based on user command
-    const importPackages = await vscode.window.showQuickPick(
-        ['Yes', 'No'],
-        { 'placeHolder' : 'Would you like to import any existing packages to the environment?' }
-    );
-    if (importPackages === 'Yes') {
-        const userDirs = await vscode.window.showOpenDialog({
-            canSelectMany: true,
-            openLabel: 'Select directories to import',
-            canSelectFiles: false,
-            canSelectFolders: true
-        });
+    let mountPath: string;
+    if (useDefault === 'Default workspace') {
+        mountPath = getNormalizedFolderPath(undefined, containerName);
+    } else {
+        const folder = await vscode.window.showOpenDialog({ canSelectFolders: true });
+        if (!folder) { return; }
 
-        if (userDirs && userDirs.length > 0) {
-            await withUserProgress('Copying selected packages to the environment ...', async (progress, token) => {
-                const path = require('path');
-                for (const dir of userDirs) {
-                    const dirName = path.basename(dir.fsPath);
-                    const targetPath = path.join(workspacePath, dirName);
-                    await copyFolder(dir.fsPath, targetPath);
-                }
-
-                progress.report({ message: `Imported ${userDirs.length} package(s)` });
-            });
-        }
+        mountPath = getNormalizedFolderPath(folder[0].fsPath);
     }
+
+    const workspacePath = mountPath;
 
     await withUserProgress(`Create ROS2 Environment "${containerName}"...`, async (progress, token) => {
         if (token.isCancellationRequested) { return; }
@@ -104,7 +92,7 @@ export async function createEnvironment(context: vscode.ExtensionContext) {
                 const dockerShellCmd = [
                     `${dockerCmd} run -dit`,
                     `--name ${containerName}`,
-                    `-v "${workspacePath}:/home/ubuntu/ros2_ws/src"`,
+                    `-v "${workspacePath}:/home/ubuntu/ros2"`,
                     `-p 6080:80`,
                     `--shm-size=512m`,
                     `--restart=unless-stopped`,
@@ -134,14 +122,4 @@ export async function createEnvironment(context: vscode.ExtensionContext) {
             });
         });
     });
-}
-
-async function copyFolder(source: string, destination: string) {
-    const fs = require('fs-extra');
-    try {
-        await fs.copy(source, destination);
-        console.log(`Successfully copied ${source} to ${destination}`);
-    } catch (error) {
-        console.error(`Failed to copy ${source} to ${destination}`, error);
-    }
 }

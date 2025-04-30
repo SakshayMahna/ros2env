@@ -88,7 +88,7 @@ export async function loadEnvironment(context: vscode.ExtensionContext) {
                 const terminal = createDockerTerminal(selectedContainer.name);
                 terminal.show();
 
-                const hostWorkspacePath = await getMountedHostPath(selectedContainer.name, '/home/ubuntu/ros2_ws/src');
+                const hostWorkspacePath = await getMountedHostPath(selectedContainer.name, '/home/ubuntu/ros2');
                 if (hostWorkspacePath) {
                     vscode.commands.executeCommand(
                         'vscode.openFolder',
