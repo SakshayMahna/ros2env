@@ -83,7 +83,9 @@ export async function createEnvironment(context: vscode.ExtensionContext) {
                     `-v "${workspacePath}:/home/ubuntu/ros2_ws/src"`,
                     `-p 6080:80`,
                     `--shm-size=512m`,
-                    `tiryoh/ros2-desktop-vnc:${rosDistro}`
+                    `--restart=unless-stopped`,
+                    `tiryoh/ros2-desktop-vnc:${rosDistro}`,
+                    "bash", "-c", "tail -f /dev/null"
                 ].join(' ');
     
                 exec(dockerShellCmd, (error, stdout, stderr) => {
