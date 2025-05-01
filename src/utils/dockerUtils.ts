@@ -76,6 +76,31 @@ export function createDockerTerminal(containerName: string, title?: string): vsc
     });
 }
 
+export function runSyncScript(containerName: string, title?: string): vscode.Terminal {
+    const isWsl = getState().isWsl;
+
+    const shellPath = isWsl ? 'wsl' : 'docker';
+    const shellArgs = isWsl 
+        ? [
+            'docker', 'exec', '-it',
+            '--user', 'ubuntu',
+            containerName,
+            'bash', '-c', 'chmod +x /home/ubuntu/ros2_ws/.ros2config/startup.sh && bash /home/ubuntu/ros2_ws/.ros2config/startup.sh'
+        ]
+        : [
+            'exec', '-it',
+            '--user', 'ubuntu',
+            containerName,
+            'bash', '-c', 'chmod +x /home/ubuntu/ros2_ws/.ros2config/startup.sh && bash /home/ubuntu/ros2_ws/.ros2config/startup.sh'
+        ];
+
+    return vscode.window.createTerminal({
+        name: title ?? `ROS2: ${containerName}`,
+        shellPath,
+        shellArgs
+    });
+}
+
 export function getRosContainers(callback: (containers: { name: string, distro: string, status: string }[]) => void) {
     const dockerCmd = getDockerCommand();
     const cmd = `${dockerCmd} ps -a --format "{{.Names}}:::{{.Image}}:::{{.Status}}"`;

@@ -5,6 +5,7 @@ import { getRosContainers, checkDockerInstalled, pullImageIfNotPresent,
          createDockerTerminal } from '../utils/dockerUtils';
 import { setActiveContainer } from '../utils/state';
 import { withUserProgress } from '../utils/withUserProgress';
+import { generateSyncScript, generateCppProperties } from '../utils/codeUtils';
 
 export async function createEnvironment(context: vscode.ExtensionContext) {
     // Check if Docker is installed
@@ -51,6 +52,8 @@ export async function createEnvironment(context: vscode.ExtensionContext) {
     }
 
     const workspacePath = mountPath;
+    generateSyncScript(rosDistro, workspacePath);
+    generateCppProperties(rosDistro, workspacePath);
 
     await withUserProgress(`Create ROS2 Environment "${containerName}"...`, async (progress, token) => {
         if (token.isCancellationRequested) { return; }

@@ -7,7 +7,7 @@ import { openTerminal } from './commands/openTerminal';
 import { stopEnvironment } from './commands/stopEnvironment';
 import { getActiveContainer, initializeState } from './utils/state';
 import { disposeStatusBar, initializeStatusBar, showStatusBar } from './utils/statusBar';
-import { createDockerTerminal, getDockerCommand } from './utils/dockerUtils';
+import { createDockerTerminal, getDockerCommand, runSyncScript } from './utils/dockerUtils';
 
 export function activate(context: vscode.ExtensionContext) {
     console.log('ROS2 Environment Manager is now active!');
@@ -24,6 +24,9 @@ export function activate(context: vscode.ExtensionContext) {
     if (activeContainer && activeContainer !== '') {
         console.log(`Found active environment: ${activeContainer}`);
         
+        // Run sync script
+        runSyncScript(activeContainer);
+
         // Terminal
         const terminal = createDockerTerminal(activeContainer);
         terminal.show();
