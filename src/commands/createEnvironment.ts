@@ -2,8 +2,7 @@ import * as vscode from 'vscode';
 import { exec } from 'child_process';
 import { getRosContainers, checkDockerInstalled, pullImageIfNotPresent,
          getNormalizedFolderPath, getDockerCommand,
-         createDockerTerminal
- } from '../utils/dockerUtils';
+         createDockerTerminal } from '../utils/dockerUtils';
 import { setActiveContainer } from '../utils/state';
 import { withUserProgress } from '../utils/withUserProgress';
 
@@ -92,7 +91,7 @@ export async function createEnvironment(context: vscode.ExtensionContext) {
                 const dockerShellCmd = [
                     `${dockerCmd} run -dit`,
                     `--name ${containerName}`,
-                    `-v "${workspacePath}:/home/ubuntu/ros2"`,
+                    `-v "${workspacePath}:/home/ubuntu/ros2_ws"`,
                     `-p 6080:80`,
                     `--shm-size=512m`,
                     `--restart=unless-stopped`,

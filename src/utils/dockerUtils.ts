@@ -60,13 +60,13 @@ export function createDockerTerminal(containerName: string, title?: string): vsc
             'docker', 'exec', '-it',
             '--user', 'ubuntu',
             containerName,
-            'bash', '-c', 'export DISPLAY=:1 && cd /home/ubuntu/ros2 && bash'
+            'bash', '-c', 'export DISPLAY=:1 && cd /home/ubuntu/ros2_ws && bash'
         ]
         : [
             'exec', '-it',
             '--user', 'ubuntu',
             containerName,
-            'bash', '-c', 'export DISPLAY=:1 && cd /home/ubuntu/ros2 && bash'
+            'bash', '-c', 'export DISPLAY=:1 && cd /home/ubuntu/ros2_ws && bash'
         ];
 
     return vscode.window.createTerminal({
