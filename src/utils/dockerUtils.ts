@@ -91,7 +91,9 @@ export function getRosContainers(callback: (containers: { name: string, distro: 
         const rosContainers = lines
             .map(line => {
                 const [name, image, status] = line.split(':::');
-                const isRos = image.startsWith('tiryoh/ros2-desktop-vnc:');
+                const isRos = 
+                    image.startsWith('tiryoh/ros2-desktop-vnc:') ||
+                    image.startsWith('sakshaymahna/ros2env-kilted');
                 return isRos ? {
                     name,
                     distro: image.split(':')[1] || 'unknown',
