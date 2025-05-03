@@ -24,15 +24,19 @@ export async function createEnvironment(context: vscode.ExtensionContext) {
         return;
     }
 
-    const rosDistros = ['rolling', 'humble', 'iron', 'jazzy'];
+    const rosDistros = ['kilted (testing)', 'rolling', 'humble', 'iron', 'jazzy'];
     const rosDistro = await vscode.window.showQuickPick(rosDistros, {
         placeHolder: 'Select a ROS2 distribution',
     });
     if (!rosDistro) { return; }
 
+    let envName = `ros2-${rosDistro}`;
+    if (rosDistro === 'kilted (testing)') {
+        envName = `ros2-kilted`;
+    }
     const containerName = await vscode.window.showInputBox({
         prompt: 'Enter a name for the ROS2 environment',
-        value: `ros2-${rosDistro}`
+        value: envName
     });
     if (!containerName) { return; }
 
@@ -69,7 +73,10 @@ export async function createEnvironment(context: vscode.ExtensionContext) {
                 }
     
                 // Pull image if not already present
-                const image = `tiryoh/ros2-desktop-vnc:${rosDistro}`;
+                let image = `tiryoh/ros2-desktop-vnc:${rosDistro}`;
+                if (rosDistro === 'kilted (testing)') {
+                    image = 'sakshaymahna/ros2env-kilted:latest';
+                }
                 progress.report({ message: 'ROS2 Docker Image not found locally. Pulling from DockerHub. This may take a few minutes depending on your internet speed.' });
                 await pullImageIfNotPresent(image);
 
@@ -84,7 +91,7 @@ export async function createEnvironment(context: vscode.ExtensionContext) {
                     `-p 6080:80`,
                     `--shm-size=512m`,
                     `--restart=unless-stopped`,
-                    `tiryoh/ros2-desktop-vnc:${rosDistro}`,
+                    image,
                     "bash", "-c", "tail -f /dev/null"
                 ].join(' ');
     
