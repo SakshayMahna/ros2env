@@ -40,6 +40,45 @@ export async function createEnvironment(context: vscode.ExtensionContext) {
     });
     if (!containerName) { return; }
 
+    // Exposing additional ports
+    const additionalPorts = await vscode.window.showInputBox({
+        prompt: '[Advanced] Enter ports to expose (comma-separated, e.g., 7400, 11811/udp ,7400-7410). Leave empty for default',
+        placeHolder: 'comma separated: 7400, 11811/udp, 7400-7410 (optional)',
+        ignoreFocusOut: true
+    });
+
+    let portArgs = '-p 6080:80';
+    const mappedPorts: string[] = [];
+    const invalidPorts: string[] = [];
+
+    if (additionalPorts) {
+        const ports = additionalPorts.split(',').map(p => p.trim()).filter(p => p.length > 0);
+        const portRegex = /^(\d+)(?:-(\d+))?(\/udp)?$/;
+
+        for (const port of ports) {
+            const match = port.match(portRegex);
+            if (!match) {
+                invalidPorts.push(port);
+                continue;
+            }
+
+            const start = parseInt(match[1]);
+            const end = match[2] ? parseInt(match[2]) : start;
+            const isUdp = !!match[3];
+
+            for (let p = start; p <= end; p++) {
+                mappedPorts.push(`-p ${p}:${p}${isUdp ? '/udp': ''}`);
+            }
+        }
+
+        if (invalidPorts.length > 0) {
+            vscode.window.showErrorMessage(`Invalid port format: ${invalidPorts.join(', ')}`);
+            return;
+        }
+    }
+
+    portArgs += ' ' + mappedPorts.join(' ');
+
     const workspacePath = getEnvironmentFolderPath(containerName);
     if (!vscode.workspace.workspaceFolders) {
         vscode.window.showInformationMessage(`No workspace folder open. Environment will be created in ${workspacePath}`);
@@ -88,7 +127,7 @@ export async function createEnvironment(context: vscode.ExtensionContext) {
                     `${dockerCmd} run -dit`,
                     `--name ${containerName}`,
                     `-v "${workspacePath}:/home/ubuntu/ros2_ws/src"`,
-                    `-p 6080:80`,
+                    `${portArgs}`,
                     `--shm-size=512m`,
                     `--restart=unless-stopped`,
                     image,
