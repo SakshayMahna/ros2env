@@ -70,11 +70,11 @@ code --install-extension SakshayMahna.ros2env
 
 ### 📦 Manual Installation
 
-1. Download the latest release 👉 [Download ros2env-0.0.6.vsix](https://github.com/SakshayMahna/ros2env/releases)
+1. Download the latest release 👉 [Download ros2env-0.0.7.vsix](https://github.com/SakshayMahna/ros2env/releases)
 
 2. Install the extension in VS Code
 ```bash
-code --install-extension ros2env-0.0.6.vsix
+code --install-extension ros2env-0.0.7.vsix
 ```
 
 ---
